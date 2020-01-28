@@ -508,6 +508,11 @@ export default {
     complete (index) {
       this.list[index] = !this.list[index]
     }
+  },
+  metaInfo () {
+    return {
+      title: this.$t('Common.dashboard') + ' | ' + this.$t('Common.title')
+    }
   }
 }
 </script>

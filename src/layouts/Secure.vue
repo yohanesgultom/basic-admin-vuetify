@@ -1,6 +1,8 @@
 <template>
   <v-content>
-    <v-app>
+    <v-app
+      id="dashboard-view"
+    >
       <core-filter />
 
       <core-toolbar />
@@ -13,3 +15,13 @@
     </v-app>
   </v-content>
 </template>
+
+<script>
+export default {
+  metaInfo () {
+    return {
+      title: this.$t('Common.dashboard') + ' | ' + this.$t('Common.title')
+    }
+  }
+}
+</script>

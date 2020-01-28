@@ -7,6 +7,7 @@ Demo: https://yohanesgultom.github.io/basic-admin-vuetify/
 Features:
 1. Separate layouts for public (eg. Login) and secure (eg. Dashboard) views
 1. REST API integration with [Basic API Laravel](https://basic-api-laravel.herokuapp.com/)
+1. CRUD Data Table
 
 ## Getting Started
 

@@ -4,6 +4,7 @@
       <router-view/>
     </transition>
 
+    <!-- Global overlay -->
     <div
       v-show="overlay"
       class="overlay">
@@ -12,6 +13,7 @@
         indeterminate
         size="64"/>
     </div>
+
   </main>
 </template>
 
