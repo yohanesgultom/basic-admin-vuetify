@@ -2,7 +2,7 @@
 
 Basic admin web application build on top of [Vuetify Material Dashboard](https://github.com/creativetimofficial/vuetify-material-dashboard) from creative-tim.com. 
 
-Demo: https://yohanesgultom.github.io/basic-admin-vuetify/
+Demo: https://yohanesgultom.github.io/basic-admin-vuetify/ (login: `user@email.com/secret`)
 
 Features:
 1. Separate layouts for public (eg. Login) and secure (eg. Dashboard) views
