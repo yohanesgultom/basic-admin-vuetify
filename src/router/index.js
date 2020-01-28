@@ -12,6 +12,7 @@ import VueAnalytics from 'vue-analytics'
 import Router from 'vue-router'
 import store from '../store'
 import Meta from 'vue-meta'
+import { baseUrl } from '../../vue.config.js'
 
 // Routes
 import paths from './paths'
@@ -20,6 +21,7 @@ Vue.use(Router)
 
 // Create a new router
 const router = new Router({
+  base: baseUrl,
   mode: 'history',
   routes: paths,
   scrollBehavior (to, from, savedPosition) {

@@ -4,5 +4,5 @@ export default {
   overlay: false,
   authStatus: '',
   token: localStorage.getItem('token') || '',
-  user: {},
+  user: {}
 }

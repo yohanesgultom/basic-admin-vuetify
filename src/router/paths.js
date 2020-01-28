@@ -12,14 +12,14 @@ export default [
       requiresAuth: true
     },
     redirect: {
-      path: '/login'
+      path: { name: 'login' }
     }
   },
   // This  allows you to have pages apart of the app but no rendered inside the dash
   {
     path: '/login',
     meta: {
-      name: '',
+      name: 'login',
       requiresAuth: false
     },
     component: () =>

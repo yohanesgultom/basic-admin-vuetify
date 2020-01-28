@@ -8,9 +8,8 @@
       <core-drawer />
 
       <v-fade-transition mode="out-in">
-          <router-view />
+        <router-view />
       </v-fade-transition>
     </v-app>
   </v-content>
 </template>
-

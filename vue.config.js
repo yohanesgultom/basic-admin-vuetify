@@ -2,5 +2,5 @@ module.exports = {
   devServer: {
     disableHostCheck: true
   },
-  baseUrl: process.env.NODE_ENV === 'production' ? '' : '/',
+  baseUrl: process.env.NODE_ENV === 'production' ? '/basic-admin-vuetify/' : '/'
 }

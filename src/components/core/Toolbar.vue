@@ -87,7 +87,10 @@
           <v-icon color="tertiary">mdi-account</v-icon>
         </router-link>
 
-        <v-icon class="toolbar-items" color="tertiary" @click="logout">mdi-logout</v-icon>
+        <v-icon
+          class="toolbar-items"
+          color="tertiary"
+          @click="logout">mdi-logout</v-icon>
       </v-flex>
     </v-toolbar-items>
   </v-toolbar>
@@ -144,23 +147,23 @@ export default {
     logout: function () {
       this.$store.commit('update', { overlay: true })
       this.$http.post('/auth/logout')
-          .then(response => {
-            this.$store.commit('update', { 
-              overlay: false, 
-              authStatus: '', 
-              token: null, 
-              user: null 
-            })
-            localStorage.removeItem('token')
-            localStorage.removeItem('user')
-            delete this.$http.defaults.headers.common['Authorization']
-            this.$router.push('/login');
+        .then(response => {
+          this.$store.commit('update', {
+            overlay: false,
+            authStatus: '',
+            token: null,
+            user: null
           })
-          .catch(err => {
-            this.$store.commit('update', { overlay: false })
-            console.error(err)
-            alert('Logout failed')
-          })
+          localStorage.removeItem('token')
+          localStorage.removeItem('user')
+          delete this.$http.defaults.headers.common['Authorization']
+          this.$router.push('/login')
+        })
+        .catch(err => {
+          this.$store.commit('update', { overlay: false })
+          console.error(err)
+          alert('Logout failed')
+        })
     }
   }
 }

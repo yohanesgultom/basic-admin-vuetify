@@ -11,8 +11,8 @@
           sm8
           md4>
           <material-card
-            color="info"
             :title="$t('Common.login')"
+            color="info"
           >
             <v-card-text>
               <v-form >
@@ -54,7 +54,7 @@
             <v-snackbar
               v-model="snackbar"
               :color="color"
-              :top='true'
+              :top="true"
             >
               {{ errorMessages }}
               <v-btn
@@ -68,7 +68,7 @@
           </material-card>
         </v-flex>
       </v-layout>
-      
+
     </v-container>
   </v-content>
 </template>
@@ -88,7 +88,7 @@ export default {
 
   // Sends action to Vuex that will log you in and redirect to the dash otherwise, error
   methods: {
-    login: function () {      
+    login: function () {
       let username = this.username
       let password = this.password
       if (username && password) {
@@ -103,21 +103,21 @@ export default {
             localStorage.setItem('user', user)
             this.$http.defaults.headers.common['Authorization'] = 'Bearer ' + token
             // mutation to change state properties to the values passed along
-            this.$store.commit('update', { 
-              overlay: false, 
-              authStatus: 'success', 
-              token: token, 
-              user: user 
+            this.$store.commit('update', {
+              overlay: false,
+              authStatus: 'success',
+              token: token,
+              user: user
             })
             this.$router.push('/')
           })
           .catch(err => {
             console.error(err)
-            this.$store.commit('update', { 
+            this.$store.commit('update', {
               overlay: false,
-              authStatus: 'error', 
-              token: null, 
-              user: null 
+              authStatus: 'error',
+              token: null,
+              user: null
             })
             localStorage.removeItem('token')
             localStorage.removeItem('user')

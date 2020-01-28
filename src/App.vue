@@ -1,11 +1,16 @@
 <template>
-  <main>       
+  <main>
     <transition mode="out-in">
       <router-view/>
-    </transition>            
+    </transition>
 
-    <div class="overlay" v-show="overlay">
-      <v-progress-circular class="overlay-text" indeterminate size="64"></v-progress-circular>
+    <div
+      v-show="overlay"
+      class="overlay">
+      <v-progress-circular
+        class="overlay-text"
+        indeterminate
+        size="64"/>
     </div>
   </main>
 </template>
@@ -30,10 +35,10 @@ export default {
       set: function (val) {
         // only update when false (overlay closed)
         if (!val) {
-          this.$store.commit('update', {overlay: false})
+          this.$store.commit('update', { overlay: false })
         }
-      },
-    },
+      }
+    }
   }
 }
 </script>
