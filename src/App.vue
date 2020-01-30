@@ -4,6 +4,21 @@
       <router-view/>
     </transition>
 
+    <!-- Global snackbar -->
+    <v-snackbar
+      v-model="alertMessage"
+      :top="true"
+    >
+      {{ alertMessage }}
+      <v-btn
+        dark
+        flat
+        @click="alertMessage = false"
+      >
+        Close
+      </v-btn>
+    </v-snackbar>
+
     <!-- Global overlay -->
     <div
       v-show="overlay"
@@ -30,6 +45,17 @@
 /* eslint-disable no-console */
 export default {
   computed: {
+    alertMessage: {
+      get: function () {
+        return this.$store.state.alertMessage
+      },
+      set: function (val) {
+        // only update when false (snackbar closed)
+        if (!val) {
+          this.$store.commit('update', {alertMessage: null})
+        }
+      },
+    },
     overlay: {
       get: function () {
         return this.$store.state.overlay

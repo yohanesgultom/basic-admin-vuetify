@@ -39,6 +39,29 @@ export default [
       }
     ]
   },
+  {
+    path: '/register',
+    meta: {
+      name: 'register',
+      requiresAuth: false
+    },
+    component: () =>
+      import(/* webpackChunkName: "routes" */ `@/layouts/Public.vue`),
+    // redirect if already signed in
+    beforeEnter: (to, from, next) => {
+      if (store.getters.authorized) {
+        next('/')
+      } else {
+        next()
+      }
+    },
+    children: [
+      {
+        path: '',
+        component: () => import(`@/views/Register.vue`)
+      }
+    ]
+  },
   // add any extra routes that you want rendered in the dashboard as a child below. Change toolbar names here
   {
     path: '/',

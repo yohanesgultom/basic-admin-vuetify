@@ -11,29 +11,28 @@
           sm8
           md4>
           <material-card
-            :title="$t('login')"
+            :title="$t('Common.forgotPassword')"
             color="info"
           >
             <v-card-text>
-              <locale-changer></locale-changer>
-              <v-form ref="form">
+              <v-form >
                 <v-text-field
                   ref="username"
                   v-model="username"
-                  :rules="[() => !!username || $t('requiredMessage')]"
+                  :rules="[() => !!username || 'This field is required']"
                   prepend-icon="mdi-account"
-                  :label="$t('email')"
-                  placeholder="user@email.com"
+                  label="Login"
+                  placeholder="username"
                   required
                 />
                 <v-text-field
                   ref="password"
                   v-model="password"
-                  :rules="[() => !!password || $t('requiredMessage')]"
+                  :rules="[() => !!password || 'This field is required']"
                   :append-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
                   :type="showPassword ? 'text' : 'password'"
                   prepend-icon="mdi-lock"
-                  :label="$t('password')"
+                  label="Password"
                   placeholder="*********"
                   counter
                   required
@@ -49,14 +48,23 @@
                 align-center
                 justify-center
                 color="info"
-                @click="login">{{ $t('login') }}
-              </v-btn>
-              <v-btn
-                align-center
-                justify-center                
-                to="register">{{ $t('register') }}
+                @click="login">{{ $t('Common.login') }}
               </v-btn>
             </v-card-actions>
+            <v-snackbar
+              v-model="snackbar"
+              :color="color"
+              :top="true"
+            >
+              {{ errorMessages }}
+              <v-btn
+                dark
+                flat
+                @click="snackbar = false"
+              >
+                Close
+              </v-btn>
+            </v-snackbar>
           </material-card>
         </v-flex>
       </v-layout>
@@ -71,6 +79,9 @@ export default {
     return {
       username: '',
       password: '',
+      errorMessages: 'Incorrect login info',
+      snackbar: false,
+      color: 'general',
       showPassword: false
     }
   },
@@ -78,9 +89,9 @@ export default {
   // Sends action to Vuex that will log you in and redirect to the dash otherwise, error
   methods: {
     login: function () {
-      if (this.$refs.form.validate()) {
-        let username = this.username
-        let password = this.password
+      let username = this.username
+      let password = this.password
+      if (username && password) {
         this.$store.commit('update', { overlay: true })
         this.$http.post('/auth/login', { email: username, password: password })
           .then(response => {
@@ -102,23 +113,22 @@ export default {
           })
           .catch(err => {
             console.error(err)
-            let errMsg = err.response.data || err
             this.$store.commit('update', {
               overlay: false,
-              alertMessage: errMsg,
               authStatus: 'error',
               token: null,
               user: null
             })
             localStorage.removeItem('token')
             localStorage.removeItem('user')
+            this.snackbar = true
           })
       }
     }
   },
   metaInfo () {
     return {
-      title: this.$t('login') + ' | ' + this.$t('title')
+      title: this.$t('Common.login') + ' | ' + this.$t('Common.title')
     }
   }
 }

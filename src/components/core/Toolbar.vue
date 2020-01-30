@@ -145,24 +145,27 @@ export default {
       }
     },
     logout: function () {
+      // attempt to logout from server           
       this.$store.commit('update', { overlay: true })
       this.$http.post('/auth/logout')
         .then(response => {
-          this.$store.commit('update', {
+          console.log(response.data)          
+        })
+        .catch(err => {
+          console.error(err)
+        })
+        .finally(() => {
+          // purge local data despite of the result
+          localStorage.removeItem('token')
+          localStorage.removeItem('user')
+          delete this.$http.defaults.headers.common['Authorization'] 
+          this.$store.commit('update', { 
             overlay: false,
             authStatus: '',
             token: null,
-            user: null
+            user: null        
           })
-          localStorage.removeItem('token')
-          localStorage.removeItem('user')
-          delete this.$http.defaults.headers.common['Authorization']
           this.$router.push('/login')
-        })
-        .catch(err => {
-          this.$store.commit('update', { overlay: false })
-          console.error(err)
-          alert('Logout failed')
         })
     }
   }

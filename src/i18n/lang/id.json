@@ -1,0 +1,18 @@
+{
+    "title": "Basic Admin Vuetify",
+    "login": "Masuk",
+    "logout": "Keluar",
+    "menu": "Menu",
+    "register": "Daftar",
+    "registration": "Pendaftaran",
+    "registrationSuccess": "Pendaftaran berhasil. Silahkan cek email Anda",
+    "forgotPassword": "Lupa Sandi",
+    "send": "Kirim",
+    "email": "Surel",
+    "password": "Sandi",
+    "passwordConfirmation": "Konfirmasi Sandi",
+    "requiredMessage": "Tidak boleh kosong",
+    "invalidConfirmationMessage": "Harus sama",
+    "dashboard": "Dashboard"
+}
+  

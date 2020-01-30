@@ -11,9 +11,9 @@
           sm8
           md4>
           <material-card
-            :title="$t('login')"
-            color="info"
-          >
+            :title="$t('registration')"
+            color="success"
+          >            
             <v-card-text>
               <locale-changer></locale-changer>
               <v-form ref="form">
@@ -37,8 +37,20 @@
                   placeholder="*********"
                   counter
                   required
-                  @keydown.enter="login"
-                  @click:append="showPassword = !showPassword"
+                />
+                <v-text-field
+                  ref="passwordConfirmation"
+                  v-model="passwordConfirmation"
+                  :rules="[() => !!passwordConfirmation || $t('requiredMessage'), () => passwordConfirmation === password || $t('invalidConfirmationMessage')]"
+                  :append-icon="showPasswordConfirmation ? 'mdi-eye-off' : 'mdi-eye'"
+                  :type="showPasswordConfirmation ? 'text' : 'password'"
+                  prepend-icon="mdi-lock"
+                  :label="$t('passwordConfirmation')"
+                  placeholder="*********"
+                  counter
+                  required
+                  @keydown.enter="register"
+                  @click:append="showPasswordConfirmation = !showPasswordConfirmation"
                 />
               </v-form>
             </v-card-text>
@@ -48,13 +60,13 @@
               <v-btn
                 align-center
                 justify-center
-                color="info"
-                @click="login">{{ $t('login') }}
+                color="success"
+                @click="register">{{ $t('register') }}
               </v-btn>
               <v-btn
                 align-center
                 justify-center                
-                to="register">{{ $t('register') }}
+                to="login">{{ $t('login') }}
               </v-btn>
             </v-card-actions>
           </material-card>
@@ -71,54 +83,42 @@ export default {
     return {
       username: '',
       password: '',
-      showPassword: false
+      passwordConfirmation: '',
+      color: 'general',
+      showPassword: false,
+      showPasswordConfirmation: false,
     }
   },
 
   // Sends action to Vuex that will log you in and redirect to the dash otherwise, error
   methods: {
-    login: function () {
+    register: function () {
       if (this.$refs.form.validate()) {
         let username = this.username
         let password = this.password
+        let passwordConfirmation = this.passwordConfirmation
         this.$store.commit('update', { overlay: true })
-        this.$http.post('/auth/login', { email: username, password: password })
+        this.$http.post('/auth/register', { email: username, password: password, password_confirmation: passwordConfirmation })
           .then(response => {
-            const token = response.data.access_token
-            const user = response.data.email
-            // console.log(response)
-            // storing jwt in localStorage. https cookie is safer place to store
-            localStorage.setItem('token', token)
-            localStorage.setItem('user', user)
-            this.$http.defaults.headers.common['Authorization'] = 'Bearer ' + token
-            // mutation to change state properties to the values passed along
             this.$store.commit('update', {
               overlay: false,
-              authStatus: 'success',
-              token: token,
-              user: user
+              alertMessage: this.$t('registrationSuccess'),
             })
-            this.$router.push('/')
           })
           .catch(err => {
-            console.error(err)
             let errMsg = err.response.data || err
+            console.error(err.response)
             this.$store.commit('update', {
               overlay: false,
               alertMessage: errMsg,
-              authStatus: 'error',
-              token: null,
-              user: null
             })
-            localStorage.removeItem('token')
-            localStorage.removeItem('user')
           })
       }
     }
   },
   metaInfo () {
     return {
-      title: this.$t('login') + ' | ' + this.$t('title')
+      title: this.$t('registration') + ' | ' + this.$t('title')
     }
   }
 }

@@ -1,0 +1,18 @@
+{
+    "title": "Basic Admin Vuetify",
+    "login": "Login",
+    "logout": "Logout",
+    "menu": "Menu",
+    "register": "Register",
+    "registration": "Registration",
+    "registrationSuccess": "Registration successful. Please check your email",
+    "forgotPassword": "Forgot Password",
+    "send": "Send",
+    "email": "E-mail",
+    "password": "Password",
+    "passwordConfirmation": "Confirm Password",
+    "requiredMessage": "This field is required",
+    "invalidConfirmationMessage": "Must be the same value",
+    "dashboard": "Dashboard"
+}
+  
