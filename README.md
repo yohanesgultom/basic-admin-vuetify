@@ -6,10 +6,11 @@ Demo: https://yohanesgultom.github.io/basic-admin-vuetify/ (login: `user@email.c
 
 Features:
 1. Separate layouts for public (eg. Login) and secure (eg. Dashboard) views
-2. Global overlay and snackbar
+2. Global overlay and snackbar (alert)
 3. Internationalization with `vue-18n`
 4. REST API integration with [Basic API Laravel](https://basic-api-laravel.herokuapp.com/)
 5. CRUD Data Table
+6. Google Recaptcha v3 for login
 
 ## Getting Started
 
