@@ -41,6 +41,9 @@ if (token) {
   axios.defaults.headers.common['Authorization'] = 'Bearer ' + token
 }
 
+// Google Recaptcha 
+Vue.prototype.$recaptchaSiteKey = process.env.VUE_APP_RECAPTCHA_SITE_KEY
+
 // Sync store with router
 sync(store, router)
 

@@ -70,51 +70,72 @@ export default {
   data: function () {
     return {
       username: '',
-      password: '',
+      password: '',      
       showPassword: false
     }
   },
 
   // Sends action to Vuex that will log you in and redirect to the dash otherwise, error
   methods: {
-    login: function () {
+    login: async function () {
       if (this.$refs.form.validate()) {
-        let username = this.username
-        let password = this.password
-        this.$store.commit('update', { overlay: true })
-        this.$http.post('/auth/login', { email: username, password: password })
-          .then(response => {
-            const token = response.data.access_token
-            const user = response.data.email
-            // console.log(response)
-            // storing jwt in localStorage. https cookie is safer place to store
-            localStorage.setItem('token', token)
-            localStorage.setItem('user', user)
-            this.$http.defaults.headers.common['Authorization'] = 'Bearer ' + token
-            // mutation to change state properties to the values passed along
-            this.$store.commit('update', {
-              overlay: false,
-              authStatus: 'success',
-              token: token,
-              user: user
-            })
-            this.$router.push('/')
+        this.$store.commit('update', { overlay: true })                
+        try {
+          // get recaptcha token
+          let recaptchaToken = await this.getRecaptchaToken()
+          // attempt login to server
+          let response = await this.$http.post('/auth/login', {
+            'email': this.username, 
+            'password': this.password, 
+            'g-recaptcha-response': recaptchaToken,
+          })          
+          const token = response.data.access_token
+          const user = response.data.email
+          // console.log(response)
+          // storing jwt in localStorage. https cookie is safer place to store
+          localStorage.setItem('token', token)
+          localStorage.setItem('user', user)
+          this.$http.defaults.headers.common['Authorization'] = 'Bearer ' + token
+          // mutation to change state properties to the values passed along
+          this.$store.commit('update', {
+            overlay: false,
+            authStatus: 'success',
+            token: token,
+            user: user
           })
-          .catch(err => {
-            console.error(err)
-            let errMsg = err.response.data || err
-            this.$store.commit('update', {
-              overlay: false,
-              alertMessage: errMsg,
-              authStatus: 'error',
-              token: null,
-              user: null
-            })
-            localStorage.removeItem('token')
-            localStorage.removeItem('user')
+          this.$router.push('/')
+        } catch(err) {
+          console.error(err)
+          let errMsg = err.response.data || err
+          this.$store.commit('update', {
+            overlay: false,
+            alertMessage: errMsg,
+            authStatus: 'error',
+            token: null,
+            user: null
           })
+          localStorage.removeItem('token')
+          localStorage.removeItem('user')
+          this.recaptchaToken = null
+        }
       }
+    },
+    getRecaptchaToken: function() {
+      return new Promise((resolve) => {
+        grecaptcha.ready(() => {
+        grecaptcha.execute(this.$recaptchaSiteKey, {action: 'login'})
+          .then((token) => {
+            console.log('token', token)
+            resolve(token)
+          })
+        })
+      })
     }
+  },
+  mounted() {
+    let recaptchaScript = document.createElement('script')
+    recaptchaScript.setAttribute('src', `https://www.google.com/recaptcha/api.js?render=${this.$recaptchaSiteKey}`)
+    document.head.appendChild(recaptchaScript)    
   },
   metaInfo () {
     return {

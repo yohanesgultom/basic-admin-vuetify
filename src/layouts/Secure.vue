@@ -20,7 +20,7 @@
 export default {
   metaInfo () {
     return {
-      title: this.$t('Common.dashboard') + ' | ' + this.$t('Common.title')
+      title: this.$t('dashboard') + ' | ' + this.$t('title')
     }
   }
 }
