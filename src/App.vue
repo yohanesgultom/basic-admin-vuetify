@@ -52,9 +52,9 @@ export default {
       set: function (val) {
         // only update when false (snackbar closed)
         if (!val) {
-          this.$store.commit('update', {alertMessage: null})
+          this.$store.commit('update', { alertMessage: null })
         }
-      },
+      }
     },
     overlay: {
       get: function () {

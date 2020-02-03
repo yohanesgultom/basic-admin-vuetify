@@ -14,15 +14,14 @@
             :title="$t('login')"
             color="info"
           >
-            <v-card-text>
-              <locale-changer></locale-changer>
+            <v-card-text>              
               <v-form ref="form">
                 <v-text-field
                   ref="username"
                   v-model="username"
                   :rules="[() => !!username || $t('requiredMessage')]"
-                  prepend-icon="mdi-account"
                   :label="$t('email')"
+                  prepend-icon="mdi-account"
                   placeholder="user@email.com"
                   required
                 />
@@ -32,8 +31,8 @@
                   :rules="[() => !!password || $t('requiredMessage')]"
                   :append-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
                   :type="showPassword ? 'text' : 'password'"
-                  prepend-icon="mdi-lock"
                   :label="$t('password')"
+                  prepend-icon="mdi-lock"
                   placeholder="*********"
                   counter
                   required
@@ -53,7 +52,7 @@
               </v-btn>
               <v-btn
                 align-center
-                justify-center                
+                justify-center
                 to="register">{{ $t('register') }}
               </v-btn>
             </v-card-actions>
@@ -66,11 +65,14 @@
 </template>
 
 <script>
+import { recaptcha } from '@/mixins/recaptcha.js'
+
 export default {
+  mixins: [recaptcha],
   data: function () {
     return {
       username: '',
-      password: '',      
+      password: '',
       showPassword: false
     }
   },
@@ -79,16 +81,16 @@ export default {
   methods: {
     login: async function () {
       if (this.$refs.form.validate()) {
-        this.$store.commit('update', { overlay: true })                
+        this.$store.commit('update', { overlay: true })
         try {
           // get recaptcha token
-          let recaptchaToken = await this.getRecaptchaToken()
+          let recaptchaToken = await this.getRecaptchaToken('login')
           // attempt login to server
           let response = await this.$http.post('/auth/login', {
-            'email': this.username, 
-            'password': this.password, 
-            'g-recaptcha-response': recaptchaToken,
-          })          
+            email: this.username,
+            password: this.password,
+            g_recaptcha_response: recaptchaToken
+          })
           const token = response.data.access_token
           const user = response.data.email
           // console.log(response)
@@ -104,7 +106,7 @@ export default {
             user: user
           })
           this.$router.push('/')
-        } catch(err) {
+        } catch (err) {
           console.error(err)
           let errMsg = err.response.data || err
           this.$store.commit('update', {
@@ -119,23 +121,7 @@ export default {
           this.recaptchaToken = null
         }
       }
-    },
-    getRecaptchaToken: function() {
-      return new Promise((resolve) => {
-        grecaptcha.ready(() => {
-        grecaptcha.execute(this.$recaptchaSiteKey, {action: 'login'})
-          .then((token) => {
-            console.log('token', token)
-            resolve(token)
-          })
-        })
-      })
     }
-  },
-  mounted() {
-    let recaptchaScript = document.createElement('script')
-    recaptchaScript.setAttribute('src', `https://www.google.com/recaptcha/api.js?render=${this.$recaptchaSiteKey}`)
-    document.head.appendChild(recaptchaScript)    
   },
   metaInfo () {
     return {

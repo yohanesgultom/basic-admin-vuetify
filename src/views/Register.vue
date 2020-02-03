@@ -13,16 +13,15 @@
           <material-card
             :title="$t('registration')"
             color="success"
-          >            
-            <v-card-text>
-              <locale-changer></locale-changer>
+          >
+            <v-card-text>              
               <v-form ref="form">
                 <v-text-field
                   ref="username"
                   v-model="username"
                   :rules="[() => !!username || $t('requiredMessage')]"
-                  prepend-icon="mdi-account"
                   :label="$t('email')"
+                  prepend-icon="mdi-account"
                   placeholder="user@email.com"
                   required
                 />
@@ -32,8 +31,8 @@
                   :rules="[() => !!password || $t('requiredMessage')]"
                   :append-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
                   :type="showPassword ? 'text' : 'password'"
-                  prepend-icon="mdi-lock"
                   :label="$t('password')"
+                  prepend-icon="mdi-lock"
                   placeholder="*********"
                   counter
                   required
@@ -44,8 +43,8 @@
                   :rules="[() => !!passwordConfirmation || $t('requiredMessage'), () => passwordConfirmation === password || $t('invalidConfirmationMessage')]"
                   :append-icon="showPasswordConfirmation ? 'mdi-eye-off' : 'mdi-eye'"
                   :type="showPasswordConfirmation ? 'text' : 'password'"
-                  prepend-icon="mdi-lock"
                   :label="$t('passwordConfirmation')"
+                  prepend-icon="mdi-lock"
                   placeholder="*********"
                   counter
                   required
@@ -65,7 +64,7 @@
               </v-btn>
               <v-btn
                 align-center
-                justify-center                
+                justify-center
                 to="login">{{ $t('login') }}
               </v-btn>
             </v-card-actions>
@@ -78,7 +77,10 @@
 </template>
 
 <script>
+import { recaptcha } from '@/mixins/recaptcha.js'
+
 export default {
+  mixins: [recaptcha],
   data: function () {
     return {
       username: '',
@@ -86,33 +88,35 @@ export default {
       passwordConfirmation: '',
       color: 'general',
       showPassword: false,
-      showPasswordConfirmation: false,
+      showPasswordConfirmation: false
     }
   },
 
   // Sends action to Vuex that will log you in and redirect to the dash otherwise, error
   methods: {
-    register: function () {
+    register: async function () {
       if (this.$refs.form.validate()) {
-        let username = this.username
-        let password = this.password
-        let passwordConfirmation = this.passwordConfirmation
         this.$store.commit('update', { overlay: true })
-        this.$http.post('/auth/register', { email: username, password: password, password_confirmation: passwordConfirmation })
-          .then(response => {
-            this.$store.commit('update', {
-              overlay: false,
-              alertMessage: this.$t('registrationSuccess'),
-            })
+        try {
+          let recaptchaToken = await this.getRecaptchaToken('register')
+          await this.$http.post('/auth/register', {
+            email: this.username,
+            password: this.password,
+            password_confirmation: this.passwordConfirmation,
+            g_recaptcha_response: recaptchaToken
           })
-          .catch(err => {
-            let errMsg = err.response.data || err
-            console.error(err.response)
-            this.$store.commit('update', {
-              overlay: false,
-              alertMessage: errMsg,
-            })
+          this.$store.commit('update', {
+            overlay: false,
+            alertMessage: this.$t('registrationSuccess')
           })
+        } catch (err) {
+          let errMsg = err.response.data || err
+          console.error(err.response)
+          this.$store.commit('update', {
+            overlay: false,
+            alertMessage: errMsg
+          })
+        }
       }
     }
   },

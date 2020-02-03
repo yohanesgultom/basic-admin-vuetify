@@ -11,7 +11,6 @@
         class="tertiary--text font-weight-light"
       >
         <v-btn
-          v-if="responsive"
           class="default v-btn--simple"
           dark
           icon
@@ -30,6 +29,7 @@
         layout
         py-2
       >
+        <locale-changer class="mr-4"/>        
         <v-text-field
           class="mr-4 purple-input"
           label="Search..."
@@ -145,11 +145,11 @@ export default {
       }
     },
     logout: function () {
-      // attempt to logout from server           
+      // attempt to logout from server
       this.$store.commit('update', { overlay: true })
       this.$http.post('/auth/logout')
         .then(response => {
-          console.log(response.data)          
+          console.log(response.data)
         })
         .catch(err => {
           console.error(err)
@@ -158,12 +158,12 @@ export default {
           // purge local data despite of the result
           localStorage.removeItem('token')
           localStorage.removeItem('user')
-          delete this.$http.defaults.headers.common['Authorization'] 
-          this.$store.commit('update', { 
+          delete this.$http.defaults.headers.common['Authorization']
+          this.$store.commit('update', {
             overlay: false,
             authStatus: '',
             token: null,
-            user: null        
+            user: null
           })
           this.$router.push('/login')
         })
