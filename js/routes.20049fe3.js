@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["routes"],{"6b07":function(t,e,n){"use strict";n.r(e);var o=function(){var t=this,e=t.$createElement,n=t._self._c||e;return n("v-app",{attrs:{id:"login-home"}},[n("locale-changer"),n("transition",{attrs:{mode:"out-in"}},[n("router-view")],1)],1)},r=[],a={},i=a,l=n("2877"),s=Object(l["a"])(i,o,r,!1,null,null,null);e["default"]=s.exports}}]);
+//# sourceMappingURL=routes.20049fe3.js.map
